@@ -1,15 +1,23 @@
 package com.votacao.pauta.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.votacao.pauta.model.Pauta;
+import com.votacao.pauta.model.Usuario;
+import com.votacao.pauta.service.PautaService;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/buscar-usuario")
 public class UsuarioController {
-    @GetMapping ("usuario")
-    public String buscarUsuario (){
+    private PautaService pautaService;
+
+    public UsuarioController(PautaService pautaService) {
+        this.pautaService = pautaService;
+    }
+
+    @GetMapping("/usuario")
+    public String buscarUsuario() {
         return "buscar usuário";
     }
+
 
 }
