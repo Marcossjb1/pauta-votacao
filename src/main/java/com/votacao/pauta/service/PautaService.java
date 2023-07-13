@@ -5,6 +5,8 @@ import com.votacao.pauta.repository.PautaRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class PautaService {
     private PautaRepository pautaRepository;
@@ -12,8 +14,18 @@ public class PautaService {
     public PautaService(PautaRepository pauta) {
         this.pautaRepository = pauta;
     }
-@Transactional
-    public Pauta inserirPauta(Pauta pauta){
+
+    public Pauta inserirPauta(Pauta pauta) {
         return pautaRepository.save(pauta);
     }
+
+    public Pauta buscarPauta(Long id){
+        Optional<Pauta> resposta = pautaRepository.findById(id);
+        if (resposta.isPresent()){
+            return resposta.get();
+        }
+        throw new RuntimeException("Pauta não encontrada na base de dados");
+    }
+
+
 }

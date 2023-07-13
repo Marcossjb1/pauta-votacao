@@ -6,7 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import java.util.Date;
-@Entity //Essa anotação se refere a nossa classe ser uma tabela no banco de dados
+@Entity
 public class Pauta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

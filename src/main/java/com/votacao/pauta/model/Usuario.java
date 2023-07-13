@@ -5,9 +5,8 @@ import jakarta.persistence.GenerationType;
 import org.springframework.data.annotation.Id;
 
 public class Usuario {
-    @Id //Serve para identificar que a variável id vai ser um identificador único
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //Essa anotação gera um identificador único para a nossa entidade
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
-
 }
