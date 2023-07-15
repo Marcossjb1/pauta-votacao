@@ -23,4 +23,3 @@ public class PautaController {
     return pautaService.inserirPauta(pauta);
     }
 }
-//TODO: CRIAR UM MÉTODO GET PARA BUSCAR UM USUÁRIO E UM POST PARA INSERIR UM USUÁRIO
