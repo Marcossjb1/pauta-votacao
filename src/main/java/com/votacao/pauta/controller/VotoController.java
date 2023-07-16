@@ -12,3 +12,4 @@ public class VotoController {
         return "buscar voto";
     }
 }
+//TODO: CRIAR UM MÉTODO GET PARA BUSCAR UM VOTO E UM POST PARA INSERIR UM VOTO
