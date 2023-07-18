@@ -1,15 +1,13 @@
 package com.votacao.pauta.controller;
 
-import com.votacao.pauta.model.Pauta;
 import com.votacao.pauta.model.Usuario;
-import com.votacao.pauta.service.PautaService;
 import com.votacao.pauta.service.UsuarioService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/usuario")
 public class UsuarioController {
-    private UsuarioService usuarioService;
+    private final UsuarioService usuarioService;
 
     public UsuarioController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
@@ -20,7 +18,7 @@ public class UsuarioController {
         return null;
     }
 
-    @PostMapping
+    @PostMapping("/inserir")
     public Usuario inserirUsuario(@RequestBody Usuario usuario){
         return usuarioService.inserirUsuario(usuario);
     }

@@ -1,14 +1,14 @@
 package com.votacao.pauta.controller;
 
 import com.votacao.pauta.model.Pauta;
-import com.votacao.pauta.model.Usuario;
 import com.votacao.pauta.service.PautaService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/buscar-pauta")
+@RequestMapping("/pauta")
 public class PautaController {
-    private PautaService pautaService;
+    private final PautaService pautaService;
+
     public PautaController(PautaService pautaService) {
         this.pautaService = pautaService;
     }
@@ -18,7 +18,7 @@ public class PautaController {
         return pautaService.buscarPauta(id);
     }
 
-    @PostMapping
+    @PostMapping("/inserir")
     public Pauta inserirPauta(@RequestBody Pauta pauta) {
     return pautaService.inserirPauta(pauta);
     }
