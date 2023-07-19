@@ -19,9 +19,9 @@ public class PautaService {
     }
 
     public Pauta buscarPauta(Long id){
-        Optional<Pauta> resposta = pautaRepository.findById(id);
-        if (resposta.isPresent()){
-            return resposta.get();
+        Optional<Pauta> pauta = pautaRepository.findById(id);
+        if (pauta.isPresent()){
+            return pauta.get();
         }
         throw new RuntimeException("Pauta não encontrada na base de dados");
     }

@@ -14,8 +14,8 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}")
-    public String buscarUsuario() {
-        return null;
+    public Usuario buscarUsuario(@PathVariable Long id) {
+        return usuarioService.buscarUsuario(id);
     }
 
     @PostMapping("/inserir")
