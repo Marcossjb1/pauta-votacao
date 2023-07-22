@@ -15,6 +15,9 @@ public class UsuarioService {
     }
 
     public Usuario inserirUsuario(Usuario usuario) {
+       if (usuario.getNome().isEmpty()){
+           throw new RuntimeException("Inválido, por favor digite um nome válido!");
+       }
        return usuarioRepository.save(usuario);
     }
 
