@@ -4,19 +4,18 @@ import com.votacao.pauta.model.Pauta;
 import com.votacao.pauta.model.Voto;
 import com.votacao.pauta.repository.PautaRepository;
 import com.votacao.pauta.repository.VotoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
 public class VotoService {
-    private final VotoRepository votoRepository;
-    private final PautaRepository pautaRepository;
 
-    public VotoService(VotoRepository votoRepository, PautaRepository pautaRepository) {
-        this.votoRepository = votoRepository;
-        this.pautaRepository = pautaRepository;
-    }
+    @Autowired
+    private VotoRepository votoRepository;
+    @Autowired
+    private PautaRepository pautaRepository;
 
     public Voto inserirVoto(Voto voto) {
 
