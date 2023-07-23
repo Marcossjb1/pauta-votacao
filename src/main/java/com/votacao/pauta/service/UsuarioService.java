@@ -2,17 +2,16 @@ package com.votacao.pauta.service;
 
 import com.votacao.pauta.model.Usuario;
 import com.votacao.pauta.repository.UsuarioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
 public class UsuarioService {
-    private final UsuarioRepository usuarioRepository;
 
-    public UsuarioService(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
-    }
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     public Usuario inserirUsuario(Usuario usuario) {
        if (usuario.getNome().isEmpty()){

@@ -2,17 +2,16 @@ package com.votacao.pauta.service;
 
 import com.votacao.pauta.model.Pauta;
 import com.votacao.pauta.repository.PautaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
 public class PautaService {
-    private final PautaRepository pautaRepository;
 
-    public PautaService(PautaRepository pauta) {
-        this.pautaRepository = pauta;
-    }
+    @Autowired
+    private PautaRepository pautaRepository;
 
     public Pauta inserirPauta(Pauta pauta) {
         return pautaRepository.save(pauta);
