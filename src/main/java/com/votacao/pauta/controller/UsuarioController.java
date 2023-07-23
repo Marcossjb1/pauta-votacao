@@ -2,20 +2,18 @@ package com.votacao.pauta.controller;
 
 import com.votacao.pauta.model.Usuario;
 import com.votacao.pauta.service.UsuarioService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/usuario")
 public class UsuarioController {
-    private final UsuarioService usuarioService;
-
-    public UsuarioController(UsuarioService usuarioService) {
-        this.usuarioService = usuarioService;
-    }
+    @Autowired
+    private UsuarioService usuarioService;
 
     @GetMapping("/{id}")
-    public String buscarUsuario() {
-        return null;
+    public Usuario buscarUsuario(@PathVariable Long id) {
+        return usuarioService.buscarUsuario(id);
     }
 
     @PostMapping("/inserir")
