@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/pauta")
 public class PautaController {
+
     @Autowired
     private PautaService pautaService;
 
