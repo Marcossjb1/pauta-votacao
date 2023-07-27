@@ -17,13 +17,22 @@ public class PautaService {
         return pautaRepository.save(pauta);
     }
 
-    public Pauta buscarPauta(Long id){
+    public Pauta inserirSessao(Pauta pauta) {
+        Optional<Pauta> pautaDB = pautaRepository.findById(pauta.getId());
+        if (pautaDB.isPresent()) {
+            if (pauta.getPrazo() != null) {
+                pautaDB.get().setPrazo(pauta.getPrazo());
+                return pautaRepository.save(pauta);
+            }
+        }
+        throw new RuntimeException("A pauta não existe na base de dados!");
+    }
+
+    public Pauta buscarPauta(Long id) {
         Optional<Pauta> pauta = pautaRepository.findById(id);
-        if (pauta.isPresent()){
+        if (pauta.isPresent()) {
             return pauta.get();
         }
         throw new RuntimeException("Pauta não encontrada na base de dados");
     }
-
-
 }

@@ -19,8 +19,14 @@ public class PautaController {
 
     @PostMapping("/inserir")
     public Pauta inserirPauta(@RequestBody Pauta pauta) {
-    return pautaService.inserirPauta(pauta);
+        return pautaService.inserirPauta(pauta);
     }
 
-
+    @PostMapping("/sessao")
+    public Pauta inserirSessao(@RequestBody Pauta pauta) {
+        return pautaService.inserirSessao(pauta);
+    }
 }
+
+
+

@@ -22,4 +22,5 @@ public class VotoController {
         return votoService.inserirVoto(voto);
     }
 
+
 }
