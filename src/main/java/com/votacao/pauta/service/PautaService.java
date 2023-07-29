@@ -38,6 +38,7 @@ public class PautaService {
                     return pautaRepository.save(pautaDB.get());
                 }
             }
+            throw new RuntimeException("A pauta está fechada!");
         }
         throw new RuntimeException("A pauta não existe na base de dados!");
     }
