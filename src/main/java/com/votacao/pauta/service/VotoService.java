@@ -8,6 +8,7 @@ import com.votacao.pauta.repository.VotoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
 
@@ -23,13 +24,14 @@ public class VotoService {
 
     public Voto inserirVoto(Voto voto) {
         Date data = new Date();
+        LocalDateTime date = LocalDateTime.now();
         Optional<Pauta> pauta = pautaRepository.findById(voto.getIdPauta());
         //Na linha abaixo estamos indo no banco de dados e vendo se o id da pauta existe
         //Se a pauta existir, salva o voto, se não mostramos uma mensagem de erro na tela
         if (pautaRepository.existsById(voto.getIdPauta()) && usuarioRepository.existsById(voto.getIdUsuario())) {
             Voto votos = votoRepository.findByIdUsuarioAndIdPauta(voto.getIdUsuario(), voto.getIdPauta());
             if (votos == null) {
-                if (data.before(pauta.get().getPrazo())) {
+                if (date.isBefore(pauta.get().getPrazo())) {
                     return votoRepository.save(voto);
                 }
             throw new RuntimeException("A Pauta está fechada, você não pode mais votar!");

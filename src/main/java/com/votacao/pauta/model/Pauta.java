@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 @Entity
 public class Pauta {
@@ -12,7 +13,7 @@ public class Pauta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String descricao;
-    private Date prazo;
+    private LocalDateTime prazo;
 
     public Long getId() {
         return id;
@@ -30,11 +31,11 @@ public class Pauta {
         this.descricao = descricao;
     }
 
-    public Date getPrazo() {
+    public LocalDateTime getPrazo() {
         return prazo;
     }
 
-    public void setPrazo(Date prazo) {
+    public void setPrazo(LocalDateTime prazo) {
         this.prazo = prazo;
     }
 }

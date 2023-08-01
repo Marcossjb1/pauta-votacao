@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.xml.crypto.Data;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
@@ -22,19 +23,15 @@ public class PautaService {
 
     public Pauta inserirSessao(Pauta pauta) {
         Optional<Pauta> pautaDB = pautaRepository.findById(pauta.getId());
-        Date data = new Date();
+        LocalDateTime date = LocalDateTime.now();
         if (pautaDB.isPresent()) {
             if (pautaDB.get().getPrazo() == null) {
                 if (pauta.getPrazo() != null) {
                     pautaDB.get().setPrazo(pauta.getPrazo());
                     return pautaRepository.save(pautaDB.get());
                 } else {
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(data);
-                    calendar.add(Calendar.MINUTE, 1);
-                    calendar.getTime();
-                    pautaDB.get().setPrazo(calendar.getTime());
-
+                    date = date.plusMinutes(1);
+                    pautaDB.get().setPrazo(date);
                     return pautaRepository.save(pautaDB.get());
                 }
             }
