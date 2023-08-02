@@ -13,7 +13,7 @@ public class Voto {
     private Long id;
     private Long idPauta;
     private Long idUsuario;
-    private boolean voto;
+    private Boolean voto;
 
     public Long getId() {
         return id;
@@ -39,11 +39,11 @@ public class Voto {
         this.idUsuario = idUsuario;
     }
 
-    public boolean isVoto() {
+    public Boolean getVoto() {
         return voto;
     }
 
-    public void setVoto(boolean voto) {
+    public void setVoto(Boolean voto) {
         this.voto = voto;
     }
 }
