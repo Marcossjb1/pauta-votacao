@@ -1,6 +1,6 @@
 package com.votacao.pauta.controller;
 
-import com.votacao.pauta.model.ResultadoVotacao;
+import com.votacao.pauta.dto.ResultadoVotacao;
 import com.votacao.pauta.model.Voto;
 import com.votacao.pauta.service.VotoService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -14,15 +14,15 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
     public Usuario inserirUsuario(Usuario usuario) {
-       if (usuario.getNome().isEmpty()){
-           throw new RuntimeException("Inválido, por favor digite um nome válido!");
-       }
-       return usuarioRepository.save(usuario);
+        if (usuario.getNome().isEmpty()) {
+            throw new RuntimeException("Inválido, por favor digite um nome válido!");
+        }
+        return usuarioRepository.save(usuario);
     }
 
-    public Usuario buscarUsuario(Long id){
-        Optional<Usuario> usuario=usuarioRepository.findById(id);
-        if (usuario.isPresent()){
+    public Usuario buscarUsuario(Long id) {
+        Optional<Usuario> usuario = usuarioRepository.findById(id);
+        if (usuario.isPresent()) {
             return usuario.get();
         }
         throw new RuntimeException("Este usuário não existe na base de dados");

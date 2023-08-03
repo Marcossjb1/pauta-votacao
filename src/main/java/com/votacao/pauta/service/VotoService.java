@@ -1,14 +1,13 @@
 package com.votacao.pauta.service;
 
 import com.votacao.pauta.model.Pauta;
-import com.votacao.pauta.model.ResultadoVotacao;
+import com.votacao.pauta.dto.ResultadoVotacao;
 import com.votacao.pauta.model.Voto;
 import com.votacao.pauta.repository.PautaRepository;
 import com.votacao.pauta.repository.UsuarioRepository;
 import com.votacao.pauta.repository.VotoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +15,6 @@ import java.util.Optional;
 
 @Service
 public class VotoService {
-
     @Autowired
     private VotoRepository votoRepository;
     @Autowired
@@ -71,9 +69,9 @@ public class VotoService {
             }
         }
         if (sim>nao){
-            resultado = "Pauta aprovada!";
+            resultado = "A pauta foi aprovada!";
         } else {
-            resultado = " Pauta reprovada!";
+            resultado = "A pauta foi reprovada!";
         }
         return new ResultadoVotacao(idPauta,sim,nao,resultado);
     }
