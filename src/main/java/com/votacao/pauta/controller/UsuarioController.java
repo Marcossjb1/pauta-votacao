@@ -18,7 +18,12 @@ public class UsuarioController {
     }
 
     @PostMapping("/inserir")
-    public Usuario inserirUsuario(@RequestBody Usuario usuario){
+    public Usuario inserirUsuario(@RequestBody Usuario usuario) {
         return usuarioService.inserirUsuario(usuario);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deletarUsuario(@PathVariable Long id) {
+        usuarioService.deletarUsuario(id);
     }
 }

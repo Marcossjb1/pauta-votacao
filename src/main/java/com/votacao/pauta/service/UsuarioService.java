@@ -27,4 +27,13 @@ public class UsuarioService {
         }
         throw new RuntimeException("Este usuário não existe na base de dados");
     }
+
+    public void deletarUsuario(Long id) {
+        Optional<Usuario> deletarIdUsuario = usuarioRepository.findById(id);
+        if (deletarIdUsuario.isPresent()) {
+            usuarioRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("Usuário não encontrado ou já deletado!");
+        }
+    }
 }
