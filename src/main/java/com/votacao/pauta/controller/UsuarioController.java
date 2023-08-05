@@ -33,6 +33,11 @@ public class UsuarioController {
 
     @GetMapping("/listar-usuarios")
     public List<Usuario> listarTodosUsuarios() {
-       return usuarioService.listarTodosUsuarios();
+        return usuarioService.listarTodosUsuarios();
+    }
+
+    @PutMapping("/{id}")
+    public Usuario atualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuario) {
+        return usuarioService.atualizarUsuario(id, usuario);
     }
 }
