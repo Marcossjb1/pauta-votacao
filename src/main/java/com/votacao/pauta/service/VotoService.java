@@ -23,11 +23,8 @@ public class VotoService {
     private UsuarioRepository usuarioRepository;
 
     public Voto inserirVoto(Voto voto) {
-        Date data = new Date();
         LocalDateTime date = LocalDateTime.now();
         Optional<Pauta> pauta = pautaRepository.findById(voto.getIdPauta());
-        //Na linha abaixo estamos indo no banco de dados e vendo se o id da pauta existe
-        //Se a pauta existir, salva o voto, se não mostramos uma mensagem de erro na tela
         if (pautaRepository.existsById(voto.getIdPauta()) && usuarioRepository.existsById(voto.getIdUsuario())) {
             Voto votos = votoRepository.findByIdUsuarioAndIdPauta(voto.getIdUsuario(), voto.getIdPauta());
             if (votos == null) {
@@ -42,7 +39,6 @@ public class VotoService {
     }
 
     public Voto buscarVoto(Long id) {
-        //Na linha abaixo estamos indo no banco de dados e buscando o voto por id
         Optional<Voto> voto = votoRepository.findById(id);
         if (voto.isPresent()) {
             return voto.get();
@@ -76,8 +72,3 @@ public class VotoService {
         return new ResultadoVotacao(idPauta,sim,nao,resultado);
     }
 }
-
-//TODO: USUÁRIO NÃO PODE INSERIR VOTO EM UMA PAUTA INEXISTENTE [X]
-//TODO: USUÁRIO NÃO PODE VOTAR MAIS DE UMA VEZ [X]
-//TODO: USUÁRIO NÃO PODE VOTAR SE A PAUTA ESTIVER FECHADA [X]
-//TODO: USUÁRIO NÃO PODE VOTAR SE ELE NÃO ESTIVER CRIADO NA BASE DE DADOS [X]
