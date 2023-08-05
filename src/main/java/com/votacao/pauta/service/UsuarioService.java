@@ -5,7 +5,10 @@ import com.votacao.pauta.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Service
 public class UsuarioService {
@@ -36,4 +39,9 @@ public class UsuarioService {
             throw new RuntimeException("Usuário não encontrado ou já deletado!");
         }
     }
-}
+
+    public List<Usuario> listarTodosUsuarios() {
+        return usuarioRepository.findAll();
+        }
+    }
+
