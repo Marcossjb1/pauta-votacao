@@ -1,5 +1,6 @@
 package com.votacao.pauta.controller;
 
+import com.votacao.pauta.dto.ResultadoVotacao;
 import com.votacao.pauta.model.Voto;
 import com.votacao.pauta.service.VotoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,10 @@ public class VotoController {
     @PostMapping("/inserir")
     public Voto inserirVoto(@RequestBody Voto voto){
         return votoService.inserirVoto(voto);
+    }
+    @GetMapping("resultado/{id}")
+    public ResultadoVotacao buscarResultado(@PathVariable Long id){
+        return votoService.resultadoVotacao(id);
     }
 
 
