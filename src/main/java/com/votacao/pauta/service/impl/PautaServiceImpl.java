@@ -23,16 +23,14 @@ public class PautaServiceImpl implements PautaService {
     @Override
     public Pauta inserirSessao(Pauta pauta) {
         Optional<Pauta> pautaDB = pautaRepository.findById(pauta.getId());
-
-        if (pautaDB.isPresent()) {
-            if (pautaDB.get().getPrazo() == null) {
-                alterarPautaComPrazo(pautaDB.get(), pauta.getPrazo());
-                return pautaRepository.save(pautaDB.get());
-            } else {
-                throw new RuntimeException("A pauta está fechada!");
-            }
-        } else {
+        if (pautaDB.isEmpty()) {
             throw new RuntimeException("A pauta não existe na base de dados!");
+        }
+        if (pautaDB.get().getPrazo() == null) {
+            alterarPautaComPrazo(pautaDB.get(), pauta.getPrazo());
+            return pautaRepository.save(pautaDB.get());
+        } else {
+            throw new RuntimeException("A pauta está fechada!");
         }
     }
 
