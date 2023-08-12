@@ -22,6 +22,7 @@ public class VotoController {
     public Voto inserirVoto(@RequestBody Voto voto){
         return votoServiceImpl.inserirVoto(voto);
     }
+
     @GetMapping("resultado/{id}")
     public ResultadoVotacao buscarResultado(@PathVariable Long id){
         return votoServiceImpl.resultadoVotacao(id);

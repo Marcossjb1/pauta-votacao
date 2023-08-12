@@ -1,8 +1,10 @@
 package com.votacao.pauta.service.impl;
 
 import com.votacao.pauta.model.Pauta;
+import com.votacao.pauta.model.Usuario;
 import com.votacao.pauta.repository.PautaRepository;
 import com.votacao.pauta.service.PautaService;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +26,7 @@ public class PautaServiceImpl implements PautaService {
     public Pauta inserirSessao(Pauta pauta) {
         Optional<Pauta> pautaDB = pautaRepository.findById(pauta.getId());
         if (pautaDB.isEmpty()) {
-            throw new RuntimeException("A pauta não existe na base de dados!");
+            throw new ObjectNotFoundException(pauta.getId(), Pauta.class.getSimpleName());
         }
         if (pautaDB.get().getPrazo() == null) {
             alterarPautaComPrazo(pautaDB.get(), pauta.getPrazo());
@@ -40,10 +42,10 @@ public class PautaServiceImpl implements PautaService {
         if (pauta.isPresent()) {
             return pauta.get();
         }
-        throw new RuntimeException("Pauta não encontrada na base de dados");
+        throw new ObjectNotFoundException(id, Pauta.class.getSimpleName());
     }
 
-    public void alterarPautaComPrazo(Pauta pauta, LocalDateTime prazo) {
+    private void alterarPautaComPrazo(Pauta pauta, LocalDateTime prazo) {
         LocalDateTime date = LocalDateTime.now();
         LocalDateTime novoPrazo = (prazo != null) ? prazo : date.plusMinutes(1);
         pauta.setPrazo(novoPrazo);

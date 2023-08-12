@@ -3,6 +3,7 @@ package com.votacao.pauta.service.impl;
 import com.votacao.pauta.model.Usuario;
 import com.votacao.pauta.repository.UsuarioRepository;
 import com.votacao.pauta.service.UsuarioService;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,27 +23,31 @@ public class UsuarioServiceImpl implements UsuarioService {
         }
         return usuarioRepository.save(usuario);
     }
+
     @Override
     public Usuario buscarUsuario(Long id) {
         Optional<Usuario> usuario = usuarioRepository.findById(id);
         if (usuario.isPresent()) {
             return usuario.get();
         }
-        throw new RuntimeException("Este usuário não existe na base de dados");
+        throw new ObjectNotFoundException(id, Usuario.class.getSimpleName());
     }
+
     @Override
     public void deletarUsuario(Long id) {
         Optional<Usuario> deletarIdUsuario = usuarioRepository.findById(id);
         if (deletarIdUsuario.isPresent()) {
             usuarioRepository.deleteById(id);
         } else {
-            throw new RuntimeException("Usuário não encontrado ou já deletado!");
+            throw new ObjectNotFoundException(id, Usuario.class.getSimpleName());
         }
     }
+
     @Override
     public List<Usuario> listarTodosUsuarios() {
         return usuarioRepository.findAll();
     }
+
     @Override
     public Usuario atualizarUsuario(Long id, Usuario novoUsuario) {
         Optional<Usuario> atualizarUsuarioPorId = usuarioRepository.findById(id);
@@ -51,7 +56,7 @@ public class UsuarioServiceImpl implements UsuarioService {
             usuario.setNome(novoUsuario.getNome());
             return usuarioRepository.save(usuario);
         } else {
-            throw new RuntimeException("O usuário não existe ou não pode ser atualizado!");
+            throw new ObjectNotFoundException(id, Usuario.class.getSimpleName());
         }
     }
 }
