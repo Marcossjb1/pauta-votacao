@@ -9,6 +9,7 @@ import com.votacao.pauta.repository.VotoRepository;
 import com.votacao.pauta.service.VotoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -24,20 +25,18 @@ public class VotoServiceImpl implements VotoService {
 
     @Override
     public Voto inserirVoto(Voto voto) {
-        LocalDateTime date = LocalDateTime.now();
-        Optional<Pauta> pauta = pautaRepository.findById(voto.getIdPauta());
-        if (pautaRepository.existsById(voto.getIdPauta()) && usuarioRepository.existsById(voto.getIdUsuario())) {
+        if (validarDadosParaVotar(voto)) {
             Voto votos = votoRepository.findByIdUsuarioAndIdPauta(voto.getIdUsuario(), voto.getIdPauta());
             if (votos == null) {
-                if (date.isBefore(pauta.get().getPrazo())) {
-                    return votoRepository.save(voto);
-                }
-                throw new RuntimeException("A Pauta está fechada, você não pode mais votar!");
+                Pauta pauta = getPautaById(voto.getIdPauta());
+                verificarPrazoParaVotar(pauta);
+                return votoRepository.save(voto);
             }
             throw new RuntimeException("Você não pode votar novamente.");
         }
         throw new RuntimeException("Dados incorretos, para votar é preciso que o Usuário e Pauta estejam corretos.");
     }
+
     @Override
     public Voto buscarVoto(Long id) {
         Optional<Voto> voto = votoRepository.findById(id);
@@ -46,30 +45,71 @@ public class VotoServiceImpl implements VotoService {
         }
         throw new RuntimeException("Não foi possível encontrar o voto na base de dados.");
     }
+
     @Override
     public ResultadoVotacao resultadoVotacao(Long idPauta) {
         LocalDateTime data = LocalDateTime.now();
         Optional<Pauta> pauta = pautaRepository.findById(idPauta);
         List<Voto> votos = votoRepository.findByIdPauta(idPauta);
+        verificarVotacaoEmAndamento(data, pauta);
+        int sim = contarVotosSim(votos);
+        int nao = contarVotosNao(votos);
+        String resultado = calcularResultado(sim, nao);
+        return new ResultadoVotacao(idPauta, sim, nao, resultado);
+    }
+
+    private String calcularResultado (int sim, int nao) {
+        if (sim > nao) {
+            return "Pauta aprovada!";
+        } else {
+            return "Pauta reprovada!";
+        }
+    }
+
+    private boolean validarDadosParaVotar(Voto voto) {
+        return pautaRepository.existsById(voto.getIdPauta()) && usuarioRepository.existsById(voto.getIdUsuario());
+    }
+
+    private Pauta getPautaById(Long idPauta) {
+        Optional<Pauta> pauta = pautaRepository.findById(idPauta);
+        if (pauta.isPresent()) {
+            return pauta.get();
+        } else {
+            throw new RuntimeException("Pauta não encontrada na base de dados");
+        }
+    }
+
+    private void verificarPrazoParaVotar(Pauta pauta) {
+        LocalDateTime date = LocalDateTime.now();
+        if (date.isBefore(pauta.getPrazo())) {
+            throw new RuntimeException("A Pauta está fechada, você não pode mais votar!");
+        }
+    }
+
+    private void verificarVotacaoEmAndamento(LocalDateTime data, Optional<Pauta> pauta) {
+
         if (data.isBefore(pauta.get().getPrazo())) {
             throw new RuntimeException("A votação está em andamento!");
         }
-        int sim = 0;
-        int nao = 0;
-        String resultado = "Resultado";
+    }
 
-        for (int contador = 0; contador < votos.size(); contador++) {
-            if (votos.get(contador).getVoto()){
+    private int contarVotosSim(List<Voto> votos) {
+        int sim = 0;
+        for (Voto voto : votos) {
+            if (voto.getVoto()) {
                 sim++;
-            } else {
+            }
+        }
+        return sim;
+    }
+
+    private int contarVotosNao(List<Voto> votos) {
+        int nao = 0;
+        for (Voto voto : votos) {
+            if (!voto.getVoto()) {
                 nao++;
             }
         }
-        if (sim>nao){
-            resultado = "A pauta foi aprovada!";
-        } else {
-            resultado = "A pauta foi reprovada!";
-        }
-        return new ResultadoVotacao(idPauta,sim,nao,resultado);
+        return nao;
     }
 }
