@@ -51,33 +51,26 @@ public class VotoServiceImpl implements VotoService {
         LocalDateTime data = LocalDateTime.now();
         Optional<Pauta> pauta = pautaRepository.findById(idPauta);
         List<Voto> votos = votoRepository.findByIdPauta(idPauta);
-        if (data.isBefore(pauta.get().getPrazo())) {
-            throw new RuntimeException("A votação está em andamento!");
-        }
-        int sim = 0;
-        int nao = 0;
-        String resultado = "Resultado";
-
-        for (int contador = 0; contador < votos.size(); contador++) {
-            if (votos.get(contador).getVoto()) {
-                sim++;
-            } else {
-                nao++;
-            }
-        }
-        if (sim > nao) {
-            resultado = "A pauta foi aprovada!";
-        } else {
-            resultado = "A pauta foi reprovada!";
-        }
+        verificarVotacaoEmAndamento(data, pauta);
+        int sim = contarVotosSim(votos);
+        int nao = contarVotosNao(votos);
+        String resultado = calcularResultado(sim, nao);
         return new ResultadoVotacao(idPauta, sim, nao, resultado);
     }
 
-    public boolean validarDadosParaVotar(Voto voto) {
+    private String calcularResultado (int sim, int nao) {
+        if (sim > nao) {
+            return "Pauta aprovada!";
+        } else {
+            return "Pauta reprovada!";
+        }
+    }
+
+    private boolean validarDadosParaVotar(Voto voto) {
         return pautaRepository.existsById(voto.getIdPauta()) && usuarioRepository.existsById(voto.getIdUsuario());
     }
 
-    public Pauta getPautaById(Long idPauta) {
+    private Pauta getPautaById(Long idPauta) {
         Optional<Pauta> pauta = pautaRepository.findById(idPauta);
         if (pauta.isPresent()) {
             return pauta.get();
@@ -86,10 +79,37 @@ public class VotoServiceImpl implements VotoService {
         }
     }
 
-    public void verificarPrazoParaVotar(Pauta pauta) {
+    private void verificarPrazoParaVotar(Pauta pauta) {
         LocalDateTime date = LocalDateTime.now();
         if (date.isBefore(pauta.getPrazo())) {
             throw new RuntimeException("A Pauta está fechada, você não pode mais votar!");
         }
+    }
+
+    private void verificarVotacaoEmAndamento(LocalDateTime data, Optional<Pauta> pauta) {
+
+        if (data.isBefore(pauta.get().getPrazo())) {
+            throw new RuntimeException("A votação está em andamento!");
+        }
+    }
+
+    private int contarVotosSim(List<Voto> votos) {
+        int sim = 0;
+        for (Voto voto : votos) {
+            if (voto.getVoto()) {
+                sim++;
+            }
+        }
+        return sim;
+    }
+
+    private int contarVotosNao(List<Voto> votos) {
+        int nao = 0;
+        for (Voto voto : votos) {
+            if (!voto.getVoto()) {
+                nao++;
+            }
+        }
+        return nao;
     }
 }
