@@ -1,47 +1,41 @@
 package com.votacao.pauta.exception;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.time.Instant;
 import org.hibernate.ObjectNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.HttpClientErrorException.BadRequest;
+import org.springframework.web.client.HttpClientErrorException.Forbidden;
+import org.springframework.web.client.HttpServerErrorException.InternalServerError;
 
-
+@ControllerAdvice
 public class HttpErrorExceptionHandler {
 
-  @Autowired
-  private MessageSource messageSource;
-
-
   @ExceptionHandler(ObjectNotFoundException.class)
-  public ResponseEntity<ApiError> handleObjectNotFoundException(ObjectNotFoundException e, HttpServletRequest request) {
-    var errorMessage = messageSource.getMessage("register.not.found", new Object[]{e.getIdentifier()}, LocaleContextHolder.getLocale());
-    var error = new ApiError(HttpStatus.NOT_FOUND.value(), errorMessage, Instant.now().toEpochMilli());
-
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+  public ResponseEntity<ApiError> notFound(ObjectNotFoundException ex) {
+    return buildErrorResponse(HttpStatus.NOT_FOUND, "Não foi possível encontrar " + ex.getEntityName());
   }
 
-  @ExceptionHandler(HttpClientErrorException.Forbidden.class)
-  public ResponseEntity<ApiError> handleObjectForbiddenException(HttpClientErrorException.Forbidden e, HttpServletRequest request) {
-    var error = new ApiError(HttpStatus.FORBIDDEN.value(), e.getMessage(), Instant.now().toEpochMilli());
-    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+  @ExceptionHandler(Forbidden.class)
+  public ResponseEntity<ApiError> forbidden(Forbidden e) {
+    return buildErrorResponse(HttpStatus.FORBIDDEN, e.getMessage());
   }
 
-  @ExceptionHandler(HttpServerErrorException.InternalServerError.class)
-  public ResponseEntity<ApiError> handleObjectInternalServerErrorException(HttpServerErrorException.InternalServerError e, HttpServletRequest request) {
-    var error = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(), Instant.now().toEpochMilli());
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+  @ExceptionHandler(InternalServerError.class)
+  public ResponseEntity<ApiError> internalServerError(InternalServerError e) {
+    return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
   }
 
-  @ExceptionHandler(HttpClientErrorException.BadRequest.class)
-  public ResponseEntity<ApiError> handleObjectBadRequestErrorException(HttpClientErrorException.BadRequest e, HttpServletRequest request) {
-    var error = new ApiError(HttpStatus.BAD_REQUEST.value(), e.getMessage(), Instant.now().toEpochMilli());
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+  @ExceptionHandler(BadRequest.class)
+  public ResponseEntity<ApiError> badRequest(BadRequest e) {
+    return buildErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
   }
+
+  private ResponseEntity<ApiError> buildErrorResponse(HttpStatus status, String message) {
+    var error = new ApiError(status.value(), message, Instant.now().toEpochMilli());
+    return ResponseEntity.status(status).body(error);
+  }
+
 }

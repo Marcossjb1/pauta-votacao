@@ -7,6 +7,7 @@ import com.votacao.pauta.repository.PautaRepository;
 import com.votacao.pauta.repository.UsuarioRepository;
 import com.votacao.pauta.repository.VotoRepository;
 import com.votacao.pauta.service.VotoService;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +44,7 @@ public class VotoServiceImpl implements VotoService {
         if (voto.isPresent()) {
             return voto.get();
         }
-        throw new RuntimeException("Não foi possível encontrar o voto na base de dados.");
+        throw new ObjectNotFoundException(id, Voto.class.getSimpleName());
     }
 
     @Override
@@ -75,7 +76,7 @@ public class VotoServiceImpl implements VotoService {
         if (pauta.isPresent()) {
             return pauta.get();
         } else {
-            throw new RuntimeException("Pauta não encontrada na base de dados");
+            throw new ObjectNotFoundException(idPauta, Pauta.class.getSimpleName());
         }
     }
 
