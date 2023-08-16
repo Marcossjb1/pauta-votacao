@@ -28,8 +28,8 @@ public class HttpErrorExceptionHandler {
     return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
   }
 
-  @ExceptionHandler(BadRequest.class)
-  public ResponseEntity<ApiError> badRequest(BadRequest e) {
+  @ExceptionHandler(BadRequestException.class)
+  public ResponseEntity<ApiError> badRequest(BadRequestException e) {
     return buildErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
   }
 

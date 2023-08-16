@@ -1,15 +1,20 @@
 package com.votacao.pauta.service.impl;
 
+import com.votacao.pauta.exception.BadRequestException;
 import com.votacao.pauta.model.Pauta;
-import com.votacao.pauta.model.Usuario;
 import com.votacao.pauta.repository.PautaRepository;
 import com.votacao.pauta.service.PautaService;
+import java.time.Instant;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import org.springframework.web.client.HttpClientErrorException.BadRequest;
+import org.springframework.web.servlet.function.ServerRequest.Headers;
 
 @Service
 public class PautaServiceImpl implements PautaService {
@@ -19,7 +24,10 @@ public class PautaServiceImpl implements PautaService {
 
     @Override
     public Pauta inserirPauta(Pauta pauta) {
-        return pautaRepository.save(pauta);
+        if(!pauta.getDescricao().isEmpty()){
+            return pautaRepository.save(pauta);
+        }
+        throw new BadRequestException("é necessário inserir uma descrição na pauta");
     }
 
     @Override
