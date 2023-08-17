@@ -1,5 +1,6 @@
 package com.votacao.pauta.service.impl;
 
+import com.votacao.pauta.exception.BadRequestException;
 import com.votacao.pauta.model.Usuario;
 import com.votacao.pauta.repository.UsuarioRepository;
 import com.votacao.pauta.service.UsuarioService;
@@ -18,10 +19,16 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public Usuario inserirUsuario(Usuario usuario) {
-        if (usuario.getNome().isEmpty()) {
-            throw new RuntimeException("Inválido, por favor digite um nome válido!");
+        if (!usuario.getNome().isEmpty()) {
+            Optional<Usuario> usuarioDB = usuarioRepository.findByNome(usuario.getNome());
+            if (usuarioDB.isEmpty()) {
+                return usuarioRepository.save(usuario);
+            } else {
+                throw new BadRequestException("Nome de usuário já existe. Por favor, escolha outro nome.");
+            }
+        } else {
+            throw new BadRequestException("Nome de usuário inválido. Por favor, digite um nome válido.");
         }
-        return usuarioRepository.save(usuario);
     }
 
     @Override
@@ -35,8 +42,8 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public void deletarUsuario(Long id) {
-        Optional<Usuario> deletarIdUsuario = usuarioRepository.findById(id);
-        if (deletarIdUsuario.isPresent()) {
+        Optional<Usuario> usuario = usuarioRepository.findById(id);
+        if (usuario.isPresent()) {
             usuarioRepository.deleteById(id);
         } else {
             throw new ObjectNotFoundException(id, Usuario.class.getSimpleName());
