@@ -24,10 +24,10 @@ public class UsuarioServiceImpl implements UsuarioService {
             if (usuarioDB.isEmpty()) {
                 return usuarioRepository.save(usuario);
             } else {
-                throw new BadRequestException("Nome de usuário já existe. Por favor, escolha outro nome.");
+
             }
         } else {
-            throw new BadRequestException("Nome de usuário inválido. Por favor, digite um nome válido.");
+
         }
     }
 
