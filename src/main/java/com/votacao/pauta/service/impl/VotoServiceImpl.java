@@ -82,7 +82,7 @@ public class VotoServiceImpl implements VotoService {
 
     private void verificarPrazoParaVotar(Pauta pauta) {
         LocalDateTime date = LocalDateTime.now();
-        if (date.isBefore(pauta.getPrazo())) {
+        if (!date.isBefore(pauta.getPrazo())) {
             throw new RuntimeException("A Pauta está fechada, você não pode mais votar!");
         }
     }

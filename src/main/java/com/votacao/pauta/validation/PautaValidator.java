@@ -5,7 +5,9 @@ import com.votacao.pauta.model.Pauta;
 import com.votacao.pauta.model.Usuario;
 import com.votacao.pauta.repository.PautaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class PautaValidator {
     @Autowired
     private PautaRepository pautaRepository;
