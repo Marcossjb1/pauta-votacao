@@ -24,7 +24,6 @@ public class UsuarioServiceImpl implements UsuarioService {
     public Usuario inserirUsuario(Usuario usuario) {
         if (!usuario.getNome().isEmpty()) {
             usuarioValidator.validarNome(usuario.getNome());
-            usuarioValidator.validarNomeExistente(usuario.getNome());
             return usuarioRepository.save(usuario);
         }
         throw new BadRequestException("O nome não pode ser vazio.");
