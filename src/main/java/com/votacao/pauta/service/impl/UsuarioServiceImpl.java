@@ -4,6 +4,7 @@ import com.votacao.pauta.exception.BadRequestException;
 import com.votacao.pauta.model.Usuario;
 import com.votacao.pauta.repository.UsuarioRepository;
 import com.votacao.pauta.service.UsuarioService;
+import com.votacao.pauta.validation.UsuarioValidator;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,19 +17,16 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+    @Autowired
+    private UsuarioValidator usuarioValidator;
 
     @Override
     public Usuario inserirUsuario(Usuario usuario) {
         if (!usuario.getNome().isEmpty()) {
-            Optional<Usuario> usuarioDB = usuarioRepository.findByNome(usuario.getNome());
-            if (usuarioDB.isEmpty()) {
-                return usuarioRepository.save(usuario);
-            } else {
-                throw new BadRequestException("Nome de usuário já existe. Por favor, escolha outro nome.");
-            }
-        } else {
-            throw new BadRequestException("Nome de usuário inválido. Por favor, digite um nome válido.");
+            usuarioValidator.validarNome(usuario.getNome());
+            return usuarioRepository.save(usuario);
         }
+        throw new BadRequestException("O nome não pode ser vazio.");
     }
 
     @Override

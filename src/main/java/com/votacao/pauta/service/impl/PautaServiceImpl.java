@@ -7,6 +7,7 @@ import com.votacao.pauta.service.PautaService;
 
 import java.time.Instant;
 
+import com.votacao.pauta.validation.PautaValidator;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -24,13 +25,13 @@ public class PautaServiceImpl implements PautaService {
 
     @Autowired
     private PautaRepository pautaRepository;
+    @Autowired
+    private PautaValidator pautaValidator;
 
     @Override
     public Pauta inserirPauta(Pauta pauta) {
-        if (!pauta.getDescricao().isEmpty()) {
-            return pautaRepository.save(pauta);
-        }
-        throw new BadRequestException("É necessário inserir uma descrição na pauta.");
+        pautaValidator.validarDescricaoPauta(pauta);
+        return pautaRepository.save(pauta);
     }
 
     @Override
