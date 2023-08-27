@@ -6,8 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.client.HttpClientErrorException.BadRequest;
-import org.springframework.web.client.HttpClientErrorException.Forbidden;
 import org.springframework.web.client.HttpServerErrorException.InternalServerError;
 
 @ControllerAdvice
@@ -18,8 +16,8 @@ public class HttpErrorExceptionHandler {
     return buildErrorResponse(HttpStatus.NOT_FOUND, "Não foi possível encontrar " + ex.getEntityName());
   }
 
-  @ExceptionHandler(Forbidden.class)
-  public ResponseEntity<ApiError> forbidden(Forbidden e) {
+  @ExceptionHandler(ForbiddenException.class)
+  public ResponseEntity<ApiError> forbidden(ForbiddenException e) {
     return buildErrorResponse(HttpStatus.FORBIDDEN, e.getMessage());
   }
 

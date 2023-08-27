@@ -1,18 +1,17 @@
 package com.votacao.pauta.validation;
 
 import com.votacao.pauta.exception.BadRequestException;
-import com.votacao.pauta.model.Pauta;
-import com.votacao.pauta.model.Usuario;
-import com.votacao.pauta.repository.PautaRepository;
+import com.votacao.pauta.model.Schedule;
+import com.votacao.pauta.repository.ScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PautaValidator {
+public class ScheduleValidator {
     @Autowired
-    private PautaRepository pautaRepository;
-    public void validarDescricaoPauta(Pauta pauta){
-        if (pauta.getDescricao().isEmpty()) {
+    private ScheduleRepository scheduleRepository;
+    public void validateDescriptionOfSchedule(Schedule schedule){
+        if (schedule.getDescription().isEmpty()) {
             throw new BadRequestException("É necessário inserir uma descrição na pauta.");
         }
     }

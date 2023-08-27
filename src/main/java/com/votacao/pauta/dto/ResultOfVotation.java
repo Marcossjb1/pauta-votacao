@@ -7,9 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ResultadoVotacao {
-    private Long idPauta;
-    private int sim;
-    private int nao;
-    private String resultado;
+public class ResultOfVotation {
+    private Long idSchedule;
+    private int yes;
+    private int no;
+    private String result;
 }
