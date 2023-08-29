@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.votacao</groupId>
-    <artifactId>pauta</artifactId>
+    <artifactId>schedule</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>pauta</name>
+    <name>schedule</name>
     <description>Demo project for Spring Boot</description>
     <properties>
         <java.version>17</java.version>

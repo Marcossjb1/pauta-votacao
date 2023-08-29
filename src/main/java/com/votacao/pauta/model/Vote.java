@@ -11,11 +11,11 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Voto {
+public class Vote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long idPauta;
-    private Long idUsuario;
-    private Boolean voto;
+    private Long idSchedule;
+    private Long idUser;
+    private Boolean vote;
 }

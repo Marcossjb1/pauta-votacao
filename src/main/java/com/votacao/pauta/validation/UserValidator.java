@@ -1,19 +1,17 @@
 package com.votacao.pauta.validation;
 
 import com.votacao.pauta.exception.BadRequestException;
-import com.votacao.pauta.model.Usuario;
-import com.votacao.pauta.repository.UsuarioRepository;
+import com.votacao.pauta.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 @Service
-public class UsuarioValidator {
+public class UserValidator {
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private UserRepository userRepository;
 
-    public void validarNome(String nome) {
-        if (usuarioRepository.findByNome(nome).isPresent()) {
+    public void validateName(String nome) {
+        if (userRepository.findByNome(nome).isPresent()) {
             throw new BadRequestException("Nome de usuário já existe. Por favor, escolha outro nome.");
         }
         if (nome == null) {

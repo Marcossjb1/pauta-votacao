@@ -7,15 +7,12 @@ import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-import java.util.Date;
 @Entity
 @Getter
 @Setter
-public class Pauta {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String descricao;
-    private LocalDateTime prazo;
-}
+    private String name;
+   }
