@@ -10,6 +10,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.BDDAssertions.then;
 
 import static org.assertj.core.api.BDDAssertions.thenThrownBy;
@@ -44,4 +46,16 @@ public class UserServiceTest {
         user.setName("");
         thenThrownBy(() -> userService.createUser(user)).isInstanceOf(BadRequestException.class);
     }
+
+    @Test
+    public void shouldReturnUser() {
+        var user = new User();
+        user.setId(1L);
+        user.setName("Gui");
+        given(userRepository.findById(1L)).willReturn(Optional.of(user));
+        var result = userService.searchUser(user.getId());
+        then(result.getId()).isEqualTo(1L);
+        then(result.getName()).isEqualTo("Gui");
+    }
 }
+//TODO: CRIAR TESTE PARA VALIDAR O CENÁRIO DE ERRO AO TENTAR RETORNAR UM USUÁRIO.
