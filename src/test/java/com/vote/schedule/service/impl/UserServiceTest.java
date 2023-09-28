@@ -104,12 +104,29 @@ public class UserServiceTest {
         then(result.get(1).getId()).isEqualTo(2L);
         then(result.get(1).getName()).isEqualTo("Gui");
     }
+    @Test
+    public void shouldReturnUpdateUser(){
+        var user = new User();
+        user.setId(1L);
+        user.setName("Marcos");
+
+        var newUser = new User();
+        newUser.setId(1L);
+        newUser.setName("Gui");
+
+        given(userRepository.findById(1L)).willReturn(Optional.of(user));
+        given(userService.updateUser(1L, newUser)).willReturn(newUser);
+
+        var updateUser = userService.updateUser(1L, user);
+
+        then(updateUser.getId()).isEqualTo(1L);
+        then(updateUser.getName()).isEqualTo("Gui");
+    }
 
     @Test
     public void shouldReturnErrorUpdateUser(){
         thenThrownBy(() -> userService.updateUser(null,null))
                 .isInstanceOf(ObjectNotFoundException.class);
     }
-
 }
 
