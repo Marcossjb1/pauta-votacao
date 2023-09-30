@@ -50,7 +50,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         throw new ObjectNotFoundException(id, Schedule.class.getSimpleName());
     }
 
-    private void modifyScheduleWithDeadline(Schedule schedule, LocalDateTime deadLine) {
+    public void modifyScheduleWithDeadline(Schedule schedule, LocalDateTime deadLine) {
         LocalDateTime date = LocalDateTime.now();
         LocalDateTime newDeadLine = (deadLine != null) ? deadLine : date.plusMinutes(1);
         schedule.setDeadline(newDeadLine);
