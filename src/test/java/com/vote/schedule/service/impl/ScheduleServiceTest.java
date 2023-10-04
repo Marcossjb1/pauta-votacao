@@ -2,8 +2,11 @@ package com.vote.schedule.service.impl;
 
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.assertj.core.api.BDDAssertions.thenThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 
+import com.vote.schedule.exception.ForbiddenException;
 import com.vote.schedule.model.Schedule;
 import com.vote.schedule.repository.ScheduleRepository;
 import com.vote.schedule.validation.ScheduleValidator;
@@ -72,6 +75,23 @@ public class ScheduleServiceTest {
 
         then(result.getId()).isEqualTo(1L);
         //then(result.getDeadline()).isEqualTo(schedule.getDeadline());
+    }
+
+    @Test //MARCOS
+    public void shlouldReturnErrorOfCreateSchedule(){
+        var schedule = new Schedule();
+
+        schedule.setId(1L);
+        schedule.setDeadline(LocalDateTime.now());
+
+        given(scheduleRepository.save(schedule)).willReturn(schedule);
+
+        when(scheduleRepository.findById(1L)).thenReturn(Optional.of(schedule));
+
+        assertThrows(ForbiddenException.class, () -> scheduleService.createSession(schedule));
+
+        verify(scheduleRepository, never()).save(schedule);
+
     }
 
     @Test

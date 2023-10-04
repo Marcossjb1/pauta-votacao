@@ -32,7 +32,7 @@ public class VoteServiceImpl implements VoteService {
         if (validateDataForVote(vote)) {
             Vote votes = voteRepository.findByIdUserAndIdSchedule(vote.getIdUser(), vote.getIdSchedule());
             if (votes == null) {
-                Schedule schedule = getPautaById(vote.getIdSchedule());
+                Schedule schedule = getScheduleById(vote.getIdSchedule());
                 verifyDeadLineforVote(schedule);
                 return voteRepository.save(vote);
             }
@@ -74,7 +74,7 @@ public class VoteServiceImpl implements VoteService {
         return scheduleRepository.existsById(vote.getIdSchedule()) && userRepository.existsById(vote.getIdUser());
     }
 
-    private Schedule getPautaById(Long idSchedule) {
+    private Schedule getScheduleById(Long idSchedule) {
         Optional<Schedule> schedule = scheduleRepository.findById(idSchedule);
         if (schedule.isPresent()) {
             return schedule.get();
