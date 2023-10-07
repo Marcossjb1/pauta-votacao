@@ -3,6 +3,7 @@ package com.vote.schedule.service.impl;
 import com.vote.schedule.model.Schedule;
 import com.vote.schedule.model.Vote;
 import com.vote.schedule.repository.ScheduleRepository;
+import com.vote.schedule.repository.UserRepository;
 import com.vote.schedule.repository.VoteRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +20,8 @@ import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
 public class VoteServiceTest {
+    @Mock
+    private UserRepository userRepository;
     @Mock
     private VoteRepository voteRepository;
 
@@ -44,7 +47,8 @@ public class VoteServiceTest {
 
         given(voteRepository.findByIdUserAndIdSchedule(1L, 1L)).willReturn(vote);
         given(scheduleRepository.findById(1L)).willReturn(Optional.of(schedule));
-        given(scheduleRepository.existsById(1L)).willReturn(true);
+        given(voteServiceImpl.validateDataForVote(vote)).willReturn(true);
+        given(userRepository.existsById(1L)).willReturn(true);
 
         Vote result = voteServiceImpl.createVote(vote);
 

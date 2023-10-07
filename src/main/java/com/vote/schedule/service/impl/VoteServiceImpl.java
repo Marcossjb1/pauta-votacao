@@ -70,7 +70,7 @@ public class VoteServiceImpl implements VoteService {
         }
     }
 
-    private boolean validateDataForVote(Vote vote) {
+    public boolean validateDataForVote(Vote vote) {
         return scheduleRepository.existsById(vote.getIdSchedule()) && userRepository.existsById(vote.getIdUser());
     }
 
