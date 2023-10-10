@@ -74,10 +74,9 @@ public class ScheduleServiceTest {
         var result = scheduleService.createSession(schedule);
 
         then(result.getId()).isEqualTo(1L);
-        //then(result.getDeadline()).isEqualTo(schedule.getDeadline());
     }
 
-    @Test //MARCOS
+    @Test
     public void shlouldReturnErrorOfCreateSchedule(){
         var schedule = new Schedule();
 
@@ -91,7 +90,6 @@ public class ScheduleServiceTest {
         assertThrows(ForbiddenException.class, () -> scheduleService.createSession(schedule));
 
         verify(scheduleRepository, never()).save(schedule);
-
     }
 
     @Test
