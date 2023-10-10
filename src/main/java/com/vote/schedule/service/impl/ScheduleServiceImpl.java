@@ -6,7 +6,6 @@ import com.vote.schedule.repository.ScheduleRepository;
 import com.vote.schedule.service.ScheduleService;
 
 import com.vote.schedule.validation.ScheduleValidator;
-import lombok.var;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
