@@ -6,6 +6,7 @@ import com.vote.schedule.repository.ScheduleRepository;
 import com.vote.schedule.service.ScheduleService;
 
 import com.vote.schedule.validation.ScheduleValidator;
+import lombok.var;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,7 +51,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         throw new ObjectNotFoundException(id, Schedule.class.getSimpleName());
     }
 
-    private void modifyScheduleWithDeadline(Schedule schedule, LocalDateTime deadLine) {
+    public void modifyScheduleWithDeadline(Schedule schedule, LocalDateTime deadLine) {
         LocalDateTime date = LocalDateTime.now();
         LocalDateTime newDeadLine = (deadLine != null) ? deadLine : date.plusMinutes(1);
         schedule.setDeadline(newDeadLine);
