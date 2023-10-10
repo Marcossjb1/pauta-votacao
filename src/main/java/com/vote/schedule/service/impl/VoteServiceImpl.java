@@ -32,7 +32,7 @@ public class VoteServiceImpl implements VoteService {
         if (validateDataForVote(vote)) {
             Vote votes = voteRepository.findByIdUserAndIdSchedule(vote.getIdUser(), vote.getIdSchedule());
             if (votes == null) {
-                Schedule schedule = getScheduleById(vote.getIdSchedule());
+                var schedule = getScheduleById(vote.getIdSchedule());
                 verifyDeadLineforVote(schedule);
                 return voteRepository.save(vote);
             }

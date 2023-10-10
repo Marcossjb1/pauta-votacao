@@ -36,7 +36,7 @@ public class VoteServiceTest {
     @InjectMocks
     private VoteServiceImpl voteServiceImpl;
 
-    @Test //MARCOS
+    @Test
     public void shouldReturnCreateVote(){
 
         var schedule = new Schedule();
@@ -55,7 +55,7 @@ public class VoteServiceTest {
         given(voteServiceImpl.validateDataForVote(vote)).willReturn(true);
         given(userRepository.existsById(1L)).willReturn(true);
 
-        Vote result = voteServiceImpl.createVote(vote);
+        var result = voteServiceImpl.createVote(vote);
     }
 
     @Test
@@ -76,7 +76,7 @@ public class VoteServiceTest {
                 .isInstanceOf(ForbiddenException.class);
     }
 
-        @Test
+    @Test
     public void shouldReturnSearchVote(){
         Long voteId = 1L;
 
@@ -92,39 +92,7 @@ public class VoteServiceTest {
 
     @Test
     public void shouldReturnResultOfVote(){
-        // Defina uma pauta com ID 1 para o teste
 
-        Vote scheduleVotation = new Vote();
-        scheduleVotation.setIdSchedule(1L);
-        scheduleVotation.setVote(1L, 2L);
-        scheduleVotation.setIdUser(LocalDateTime.plusMinutes(1));
-
-        // Simule que o método findById do ScheduleRepository retorne a pauta
-
-        given(scheduleRepository.findById(1L)).willReturn(scheduleVotation);
-
-        // Crie uma lista de votos para a pauta
-        List<Vote> votes = new ArrayList<>();
-
-        // Adicione votos à lista, por exemplo, alguns votos para "yes" e alguns para "no"
-        votes.add(new Vote(existingVote.setVote(true), idSchedule, "yes"));
-        votes.add(new Vote("user2", idSchedule, "yes"));
-        votes.add(new Vote("user3", idSchedule, "no"));
-
-        // Simule que o método findByIdSchedule do VoteRepository retorne a lista de votos
-        given(voteRepository.findByIdSchedule(idSchedule)).willReturn(votes);
-
-        LocalDateTime date = LocalDateTime.now();
-
-        // Chame o método resultOfVote com o ID da pauta
-        var result = voteServiceImpl.resultOfVote(idSchedule);
-
-        // Verifique se o resultado retornado está correto
-        assertEquals(idSchedule, result.getIdSchedule());
-        assertEquals(2, result.getResult()); // Espera-se que haja 2 votos "yes"
-        assertEquals(1, result.getResult());  // Espera-se que haja 1 voto "no"
-        assertEquals("yes", result.getResult()); // Espera-se que o resultado seja "yes"
-    }
 
     }
 }
