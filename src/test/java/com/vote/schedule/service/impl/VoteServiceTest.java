@@ -1,16 +1,17 @@
 package com.vote.schedule.service.impl;
 
+import com.vote.schedule.dto.ResultOfVotation;
 import com.vote.schedule.exception.ForbiddenException;
 import com.vote.schedule.model.Schedule;
 import com.vote.schedule.model.Vote;
 import com.vote.schedule.repository.ScheduleRepository;
 import com.vote.schedule.repository.UserRepository;
 import com.vote.schedule.repository.VoteRepository;
-import org.hibernate.ObjectNotFoundException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
@@ -21,6 +22,7 @@ import java.util.Optional;
 import static org.assertj.core.api.BDDAssertions.thenThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -29,10 +31,8 @@ public class VoteServiceTest {
     private UserRepository userRepository;
     @Mock
     private VoteRepository voteRepository;
-
     @Mock
     private ScheduleRepository scheduleRepository;
-
     @InjectMocks
     private VoteServiceImpl voteServiceImpl;
 
@@ -56,6 +56,7 @@ public class VoteServiceTest {
         given(userRepository.existsById(1L)).willReturn(true);
 
         var result = voteServiceImpl.createVote(vote);
+
     }
 
     @Test
@@ -67,17 +68,18 @@ public class VoteServiceTest {
         existingVote.setId(2L);
         existingVote.setVote(true);
 
-        given(voteRepository.save(existingVote)).willReturn(existingVote);
         given(voteRepository.findByIdUserAndIdSchedule(1L, 1L)).willReturn(existingVote);
         given(scheduleRepository.existsById(existingVote.getIdSchedule())).willReturn(true);
         given(userRepository.existsById(existingVote.getIdUser())).willReturn(true);
 
         thenThrownBy(() -> voteServiceImpl.createVote(existingVote))
                 .isInstanceOf(ForbiddenException.class);
+
     }
 
     @Test
     public void shouldReturnSearchVote(){
+
         Long voteId = 1L;
 
         Vote expectedVote = new Vote();
@@ -88,11 +90,35 @@ public class VoteServiceTest {
 
         assertNotNull(resultVote);
         assertEquals(voteId, resultVote.getId());
+
     }
 
     @Test
     public void shouldReturnResultOfVote(){
 
+        Schedule schedule = new Schedule();
+        schedule.setId(1L);
+        schedule.setDeadline(LocalDateTime.now().plusMinutes(0));
+
+        List<Vote> votes = new ArrayList<>();
+        Vote voteYes = new Vote();
+        voteYes.setVote(true);
+        votes.add(voteYes);
+        Vote voteNo = new Vote();
+        voteNo.setVote(false);
+        votes.add(voteNo);
+
+
+        when(scheduleRepository.findById(1L)).thenReturn(Optional.of(schedule));
+        when(voteRepository.findByIdSchedule(1L)).thenReturn(votes);
+
+        var result = voteServiceImpl.resultOfVote(1L);
+
+        verify(scheduleRepository, Mockito.times(1)).findById(schedule.getId());
+        verify(voteRepository, Mockito.times(1)).findByIdSchedule(schedule.getId());
+
+        assertEquals(result.getIdSchedule(), schedule.getId());
 
     }
+
 }
