@@ -70,11 +70,11 @@ public class VoteServiceImpl implements VoteService {
         }
     }
 
-    public boolean validateDataForVote(Vote vote) {
+    private boolean validateDataForVote(Vote vote) {
         return scheduleRepository.existsById(vote.getIdSchedule()) && userRepository.existsById(vote.getIdUser());
     }
 
-    private Schedule getScheduleById(Long idSchedule) {
+    public Schedule getScheduleById(Long idSchedule) {
         Optional<Schedule> schedule = scheduleRepository.findById(idSchedule);
         if (schedule.isPresent()) {
             return schedule.get();
