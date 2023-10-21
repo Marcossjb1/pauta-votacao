@@ -14,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -37,11 +38,10 @@ public class VoteServiceTest {
 
     @Test
     public void shouldReturnCreateVote(){
-
         var schedule = new Schedule();
         schedule.setId(1L);
         schedule.setDescription("Pauta teste");
-        schedule.setDeadline(now().plusMinutes(1));
+        schedule.setDeadline(LocalDateTime.parse("2024-10-20T09:00:00"));
 
         var vote = new Vote();
         vote.setId(1L);
@@ -52,14 +52,19 @@ public class VoteServiceTest {
         given(voteRepository.findByIdUserAndIdSchedule(1L, 1L)).willReturn(null);
         given(scheduleRepository.findById(1L)).willReturn(Optional.of(schedule));
         given(userRepository.existsById(1L)).willReturn(true);
+        given(scheduleRepository.existsById(1L)).willReturn(true);
+        given(voteRepository.save(vote)).willReturn(vote);
 
         var result = voteServiceImpl.createVote(vote);
 
+        assertEquals(1L, result.getId());
+        assertEquals(1L, result.getIdUser());
+        assertEquals(1L, result.getIdSchedule());
+        assertEquals(true, result.getVote());
     }
 
     @Test
     public void shouldReturnExceptionAlreadyCreateVote(){
-
         Vote existingVote = new Vote();
         existingVote.setIdUser(1L);
         existingVote.setIdSchedule(1L);
@@ -72,12 +77,10 @@ public class VoteServiceTest {
 
         thenThrownBy(() -> voteServiceImpl.createVote(existingVote))
                 .isInstanceOf(ForbiddenException.class);
-
     }
 
     @Test
     public void shouldReturnSearchVote(){
-
         Long voteId = 1L;
 
         Vote expectedVote = new Vote();
@@ -88,12 +91,10 @@ public class VoteServiceTest {
 
         assertNotNull(resultVote);
         assertEquals(voteId, resultVote.getId());
-
     }
 
     @Test
     public void shouldReturnResultOfVote(){
-
         Schedule schedule = new Schedule();
         schedule.setId(1L);
         schedule.setDeadline(now().plusMinutes(0));
@@ -106,7 +107,6 @@ public class VoteServiceTest {
         voteNo.setVote(false);
         votes.add(voteNo);
 
-
         when(scheduleRepository.findById(1L)).thenReturn(Optional.of(schedule));
         when(voteRepository.findByIdSchedule(1L)).thenReturn(votes);
 
@@ -116,7 +116,6 @@ public class VoteServiceTest {
         verify(voteRepository, times(1)).findByIdSchedule(schedule.getId());
 
         assertEquals(result.getIdSchedule(), schedule.getId());
-
     }
 
     @Test
@@ -166,7 +165,6 @@ public class VoteServiceTest {
         assertEquals(result.getIdSchedule(), schedule.getId());
         assertEquals(result.getNo(), 1);
         assertEquals(result.getYes(), 2);
-
     }
 
     @Test
@@ -177,7 +175,6 @@ public class VoteServiceTest {
 
     @Test
     public void shouldReturnOfVoteInProgress(){
-
         Schedule schedule = new Schedule();
         schedule.setId(1L);
         schedule.setDeadline(now().plusMinutes(1));
@@ -190,14 +187,10 @@ public class VoteServiceTest {
         voteNo.setVote(false);
         votes.add(voteNo);
 
-
         when(scheduleRepository.findById(1L)).thenReturn(Optional.of(schedule));
         when(voteRepository.findByIdSchedule(1L)).thenReturn(votes);
 
         thenThrownBy(() -> voteServiceImpl.resultOfVote(schedule.getId()))
                 .isInstanceOf(ForbiddenException.class);
-
     }
-
-
 }
