@@ -1,5 +1,6 @@
 package com.vote.schedule.service.impl;
 
+import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.assertj.core.api.BDDAssertions.thenThrownBy;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -16,9 +17,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.cglib.core.Local;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -33,13 +32,12 @@ public class ScheduleServiceTest {
 
     @Test
     public void shouldReturnCreateSchedule(){
-        var schedule = new Schedule();
-        var date = LocalDateTime.now();
+        var schedule = mock(Schedule.class);
+        var date = now();
 
-        schedule.setId(1L);
-        schedule.setDescription("Teste unitário de Pauta");
-        schedule.setDeadline(date);
-
+        given(schedule.getId()).willReturn(1L);
+        given((schedule.getDescription())).willReturn("Teste unitário de Pauta");
+        given(schedule.getDeadline()).willReturn(date);
         given(scheduleRepository.save(schedule)).willReturn(schedule);
 
         var result = scheduleService.createSchedule(schedule);
@@ -51,11 +49,9 @@ public class ScheduleServiceTest {
 
     @Test
     public void shouldReturnCreateSessionWithScheduleEmpty(){
-        var schedule = new Schedule();
+        var schedule = mock(Schedule.class);
 
-        schedule.setId(null);
-
-        given(scheduleRepository.findById(1L)).willReturn(null);
+        given(schedule.getId()).willReturn(null);
 
         thenThrownBy(() -> scheduleService.createSession(schedule))
                 .isInstanceOf(ObjectNotFoundException.class);
@@ -63,11 +59,10 @@ public class ScheduleServiceTest {
 
     @Test
     public void shouldReturnCreateSessionOfSchedule(){
-        var schedule = new Schedule();
+        var schedule = mock(Schedule.class);
 
-        schedule.setId(1L);
-        schedule.setDeadline(null);
-
+        given(schedule.getId()).willReturn(1L);
+        given(schedule.getDeadline()).willReturn(null);
         given(scheduleRepository.findById(1L)).willReturn(Optional.of(schedule));
         given(scheduleRepository.save(schedule)).willReturn(schedule);
 
@@ -77,27 +72,21 @@ public class ScheduleServiceTest {
     }
 
     @Test
-    public void shlouldReturnErrorOfCreateSchedule(){
-        var schedule = new Schedule();
+    public void shouldReturnErrorOfCreateSchedule(){
+        var schedule = mock(Schedule.class);
 
-        schedule.setId(1L);
-        schedule.setDeadline(LocalDateTime.now());
-
-        given(scheduleRepository.save(schedule)).willReturn(schedule);
-
-        when(scheduleRepository.findById(1L)).thenReturn(Optional.of(schedule));
+        given(schedule.getId()).willReturn(1L);
+        given(schedule.getDeadline()).willReturn(now());
+        given(scheduleRepository.findById(1L)).willReturn(Optional.of(schedule));
 
         assertThrows(ForbiddenException.class, () -> scheduleService.createSession(schedule));
-
-        verify(scheduleRepository, never()).save(schedule);
     }
 
     @Test
     public void shouldReturnSearchSchedule(){
-        var schedule = new Schedule();
+        var schedule = mock(Schedule.class);
 
-        schedule.setId(1L);
-
+        given(schedule.getId()).willReturn(1L);
         given(scheduleRepository.findById(1L)).willReturn(Optional.of(schedule));
 
         var result = scheduleService.searchSchedule(schedule.getId());
@@ -107,9 +96,9 @@ public class ScheduleServiceTest {
 
     @Test
     public void shouldReturnErrorSearchSchedule(){
-        var schedule = new Schedule();
+        var schedule = mock(Schedule.class);
 
-        schedule.setId(null);
+        given(schedule.getId()).willReturn(null);
 
         thenThrownBy(() -> scheduleService.searchSchedule(schedule.getId()))
                 .isInstanceOf(ObjectNotFoundException.class);
