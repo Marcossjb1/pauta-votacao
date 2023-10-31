@@ -15,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,17 +37,16 @@ public class VoteServiceTest {
 
     @Test
     public void shouldReturnCreateVote(){
-        var schedule = new Schedule();
-        schedule.setId(1L);
-        schedule.setDescription("Pauta teste");
-        schedule.setDeadline(LocalDateTime.parse("2024-10-20T09:00:00"));
+        var schedule = mock(Schedule.class);
+        var vote = mock(Vote.class);
 
-        var vote = new Vote();
-        vote.setId(1L);
-        vote.setIdUser(1L);
-        vote.setIdSchedule(1L);
-        vote.setVote(true);
+        given(schedule.getDeadline()).willReturn(LocalDateTime.parse("2024-10-20T09:00:00"));
 
+        given(vote.getId()).willReturn(1L);
+        given(vote.getIdUser()).willReturn(1L);
+        given(vote.getIdSchedule()).willReturn(1L);
+        given(vote.getVote()).willReturn(true);
+        
         given(voteRepository.findByIdUserAndIdSchedule(1L, 1L)).willReturn(null);
         given(scheduleRepository.findById(1L)).willReturn(Optional.of(schedule));
         given(userRepository.existsById(1L)).willReturn(true);
@@ -65,11 +63,10 @@ public class VoteServiceTest {
 
     @Test
     public void shouldReturnExceptionAlreadyCreateVote(){
-        Vote existingVote = new Vote();
-        existingVote.setIdUser(1L);
-        existingVote.setIdSchedule(1L);
-        existingVote.setId(2L);
-        existingVote.setVote(true);
+        var existingVote = mock(Vote.class);
+
+        given(existingVote.getIdUser()).willReturn(1L);
+        given(existingVote.getIdSchedule()).willReturn(1L);
 
         given(voteRepository.findByIdUserAndIdSchedule(1L, 1L)).willReturn(existingVote);
         given(scheduleRepository.existsById(existingVote.getIdSchedule())).willReturn(true);
@@ -83,11 +80,12 @@ public class VoteServiceTest {
     public void shouldReturnSearchVote(){
         Long voteId = 1L;
 
-        Vote expectedVote = new Vote();
-        expectedVote.setId(voteId);
-        when(voteRepository.findById(voteId)).thenReturn(Optional.of(expectedVote));
+        var expectedVote = mock(Vote.class);
 
-        Vote resultVote = voteServiceImpl.searchVote(voteId);
+        given(expectedVote.getId()).willReturn(voteId);
+        given(voteRepository.findById(voteId)).willReturn(Optional.of(expectedVote));
+
+        var resultVote = voteServiceImpl.searchVote(voteId);
 
         assertNotNull(resultVote);
         assertEquals(voteId, resultVote.getId());
@@ -95,20 +93,18 @@ public class VoteServiceTest {
 
     @Test
     public void shouldReturnResultOfVote(){
-        Schedule schedule = new Schedule();
-        schedule.setId(1L);
-        schedule.setDeadline(now().plusMinutes(0));
+        var schedule = mock(Schedule.class);
+        var voteYes = mock(Vote.class);
+        var voteNo = mock(Vote.class);
 
-        List<Vote> votes = new ArrayList<>();
-        Vote voteYes = new Vote();
-        voteYes.setVote(true);
-        votes.add(voteYes);
-        Vote voteNo = new Vote();
-        voteNo.setVote(false);
-        votes.add(voteNo);
+        var listVotes = List.of(voteYes, voteNo);
 
-        when(scheduleRepository.findById(1L)).thenReturn(Optional.of(schedule));
-        when(voteRepository.findByIdSchedule(1L)).thenReturn(votes);
+        given(voteYes.getVote()).willReturn(true);
+        given(voteNo.getVote()).willReturn(false);
+        given(schedule.getId()).willReturn(1L);
+        given(schedule.getDeadline()).willReturn(now());
+        given(scheduleRepository.findById(1L)).willReturn(Optional.of(schedule));
+        given(voteRepository.findByIdSchedule(1L)).willReturn(listVotes);
 
         var result = voteServiceImpl.resultOfVote(1L);
 
@@ -120,9 +116,7 @@ public class VoteServiceTest {
 
     @Test
     public void shouldReturnErrorForCreateVote() {
-        var vote = new Vote();
-        vote.setId(1L);
-        vote.setVote(true);
+        var vote = mock(Vote.class);
 
         assertThrows(BadRequestException.class, () -> voteServiceImpl.createVote(vote));
 
@@ -137,25 +131,18 @@ public class VoteServiceTest {
 
     @Test
     public void shouldReturnCalculateResultForScheduleApprove(){
-        var schedule = new Schedule();
-        schedule.setId(1L);
-        schedule.setDeadline(now().plusMinutes(0));
+        var schedule = mock(Schedule.class);
+        var voteYes = mock(Vote.class);
+        var voteYesOne = mock(Vote.class);
+        var voteYesTwo = mock(Vote.class);
 
-        List<Vote> votes = new ArrayList<>();
-        var voteYes = new Vote();
-        voteYes.setVote(true);
-        votes.add(voteYes);
-
-        var voteYesOne = new Vote();
-        voteYesOne.setVote(false);
-        votes.add(voteYesOne);
-
-        var voteYesTwo = new Vote();
-        voteYesTwo.setVote(true);
-        votes.add(voteYesTwo);
-
-        when(scheduleRepository.findById(1L)).thenReturn(Optional.of(schedule));
-        when(voteRepository.findByIdSchedule(1L)).thenReturn(votes);
+        given(voteYes.getVote()).willReturn(true);
+        given(voteYesOne.getVote()).willReturn(true);
+        given(voteYesTwo.getVote()).willReturn(true);
+        given(schedule.getId()).willReturn(1L);
+        given(schedule.getDeadline()).willReturn(now().plusMinutes(0));
+        given(scheduleRepository.findById(1L)).willReturn(Optional.of(schedule));
+        given(voteRepository.findByIdSchedule(1L)).willReturn(List.of(voteYes, voteYesOne, voteYesTwo));
 
         var result = voteServiceImpl.resultOfVote(1L);
 
@@ -163,8 +150,8 @@ public class VoteServiceTest {
         verify(voteRepository, times(1)).findByIdSchedule(schedule.getId());
 
         assertEquals(result.getIdSchedule(), schedule.getId());
-        assertEquals(result.getNo(), 1);
-        assertEquals(result.getYes(), 2);
+        assertEquals(result.getNo(), 0);
+        assertEquals(result.getYes(), 3);
     }
 
     @Test
@@ -175,20 +162,14 @@ public class VoteServiceTest {
 
     @Test
     public void shouldReturnOfVoteInProgress(){
-        Schedule schedule = new Schedule();
-        schedule.setId(1L);
-        schedule.setDeadline(now().plusMinutes(1));
+        var schedule = mock(Schedule.class);
+        var voteYes = mock(Vote.class);
+        var voteNo = mock(Vote.class);
 
-        List<Vote> votes = new ArrayList<>();
-        Vote voteYes = new Vote();
-        voteYes.setVote(true);
-        votes.add(voteYes);
-        Vote voteNo = new Vote();
-        voteNo.setVote(false);
-        votes.add(voteNo);
-
-        when(scheduleRepository.findById(1L)).thenReturn(Optional.of(schedule));
-        when(voteRepository.findByIdSchedule(1L)).thenReturn(votes);
+        given(schedule.getId()).willReturn(1L);
+        given(schedule.getDeadline()).willReturn(now().plusMinutes(1));
+        given(scheduleRepository.findById(1L)).willReturn(Optional.of(schedule));
+        given(voteRepository.findByIdSchedule(1L)).willReturn(List.of(voteYes, voteNo));
 
         thenThrownBy(() -> voteServiceImpl.resultOfVote(schedule.getId()))
                 .isInstanceOf(ForbiddenException.class);
