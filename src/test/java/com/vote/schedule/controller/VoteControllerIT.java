@@ -1,4 +1,6 @@
 package com.vote.schedule.controller;
 
-public class VoteControllerIT {
+import com.vote.schedule.config.IntegrationTest;
+
+public class VoteControllerIT extends IntegrationTest {
 }
