@@ -6,8 +6,6 @@ import org.junit.Test;
 import static com.vote.schedule.fixture.UserFixture.getUser;
 import static com.vote.schedule.fixture.UserFixture.postUser;
 import static com.vote.schedule.utils.BodyBuilder.with;
-import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.withNoArgs;
 
 public class UserControllerIT extends IntegrationTest {
 
