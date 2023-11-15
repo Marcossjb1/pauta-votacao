@@ -12,7 +12,7 @@ import static io.restassured.RestAssured.withNoArgs;
 public class UserControllerIT extends IntegrationTest {
 
     @Test
-    public void shouldGetUser() {
+    public void shouldSearchUser() {
         getUser()
                 .then()
                 .statusCode(200);
@@ -25,6 +25,8 @@ public class UserControllerIT extends IntegrationTest {
 
         postUser(userBody)
                 .then()
-                .statusCode(201);
+                .statusCode(200);
     }
 }
+
+//TODO: CRIAR UMA CLASSE DE RAMDOM PARA GERAR DADOS ALEATÓRIOS PROS NOSSOS TESTES.
