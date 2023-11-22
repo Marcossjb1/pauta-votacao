@@ -24,4 +24,14 @@ public class UserFixture {
         .when()
         .post("/create");
   }
+
+  public static Response putUser(Long userId, BodyBuilder body) {
+    return given()
+            .basePath("/user")
+            .pathParam("id",userId)
+            .contentType(ContentType.JSON)
+            .body(body.build())
+            .when()
+            .put("/{id}");
+  }
 }
